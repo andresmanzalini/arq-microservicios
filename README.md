@@ -1,105 +1,63 @@
-# App de login y autenticacion con google usando OAuth2.0
+# App de login y autenticacion con OAuth2.0
 
 arquitectura de 3 microservicios
 
-backend -> Flask, OAuth2.0
+**backend** 
 
-frontend -> nodejs, React?
+Flask, OAuth2.0
 
-db -> mySql
-
-nginx -> proxy inverso para comunicacion entr microservicios y cliente
+login y autenticacion con google mediante OAuth2.0
 
 
-## app
+**frontend** 
 
-basicamente consiste en login con google mediante oAuth2.0
+nodejs, React?
 
-## bd
 
-almacena la data que se le sacude desde el browser
+**db** 
 
-datetime corrido , pero va
+mySQL
+
+
+**nginx** 
+
+proxy inverso para comunicacion entr microservicios y cliente
+
 
 
 <br/>
 
 
-## Construir  y ejecutar app
+## Construir y ejecutar app
 
 docker-compose up --build
 
 
-. bajar la app y resetearla
+## bajar la app y resetearla
 
 docker-compose down
 
 docker volume rm micro-auth-bd-docker_db_data
 
 
-. ejecutar app
-
-docker-compose up -d
-
 
 <br/>
 
 ## Microservicios
 
-### bd
 
-con el servidor ejecutando, abrir una terminal
-
-
-1. ingresar al contenedor
-
-    docker-compose exec db bash
-
-
-2. conectarse a la instancia mysql
-
-    mysql -u root -p
-
-
-3. inspeccionar la bd
-
-    SHOW DATABASES;
-    USE nueva_BD;
-    SHOW TABLES;
-    SELECT * FROM sesiones;
-
-
-<br/>
-
-
-#### microservicio backend
+### backend
 
 flujo para laburar con app
 
-abrir terminal
+para trabajar con el backend aislado ir al directorio y trabajar sobre el docker, no sobre el compose
 
-1. abrir contenedor de app
+cd backend
 
-    docker-compose exec backend bash
+docker build
 
-2. inicializar la bd. 
-este paso es solo en el 1er uso
-    
-    flask db init
+docker run 
 
-crea database nueva_BD
-
-
-3. migrar datos de la bd
-
-    flask db migrate
-
-    flask db upgrade
-
-
-4. observar
-
-    docker-compose logs -f backend
 
 
 
@@ -142,7 +100,6 @@ https://developers.google.com/identity/sign-in/web/server-side-flow?hl=es-419
 
 
 
-## completada la etapa de obtención y almacenamiento de las credenciales
 
-## listo para continuar con la utilización de las credenciales para acceder a los recursos protegidos por la API de Google en nombre del usuario.
+continuar con la utilización de las credenciales para acceder a los recursos protegidos por la API de Google en nombre del usuario.
 
