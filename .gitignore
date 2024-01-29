@@ -1,6 +1,9 @@
 .idea
 env/
 db
+backend/client-secret.json
+secrets
+envArqMicro
 
 frontend/app/.git
 frontend/app/.gitignore
