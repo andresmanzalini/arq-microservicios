@@ -1,12 +1,12 @@
 # Microservicio Backend
 
-Flask
+Flask App
 
 OAuth2.0
 
 (documentacion)
 
-bien desacoplado los microservicios
+microservicios desacoplados
 
 
 ## Construccion

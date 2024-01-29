@@ -60,63 +60,6 @@ flow = Flow.from_client_secrets_file(
 )
 
 
-###########BASE DE DATOS ########
-
-## Configura la conexión a tu base de datos
-#engine = create_engine("mysql://username:password@localhost/db_name")
-
-## Crea una sesión de SQLAlchemy
-#Session = sessionmaker(bind=engine)
-#session = Session()
-
-## Define una clase para almacenar las credenciales en la base de datos
-#Base = declarative_base()
-
-#class UserCredentials(Base):
-#    __tablename__ = 'user_credentials'
-
-#    id = Column(Integer, primary_key=True)
-#    google_id = Column(String)
-#    access_token = Column(String)
-#    refresh_token = Column(String)
-#    expires_at = Column(DateTime)
-#    id_token = Column(String)
-
-## Crea las tablas en la base de datos si no existen
-#Base.metadata.create_all(engine)
-
-
-#### Clases BD ###
-
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    google_id = db.Column(db.String(255))
-    name = db.Column(db.String(255))
-    email = db.Column(db.String(255))
-
-    def __init__(self, google_id, name, email):
-        self.google_id = google_id
-        self.name = name
-        self.email = email
-
-
-class Session(db.Model):
-    __tablename__ = "sesiones"
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    login_time = db.Column(db.DateTime)
-    logout_time = db.Column(db.DateTime)
-
-    user = db.relationship("User", backref="sesiones")
-
-    def __init__(self, user_id, login_time, logout_time):
-        self.user_id = user_id
-        self.login_time = login_time
-        self.logout_time = logout_time
-
-
-
 
 ### utilis
 
@@ -157,21 +100,6 @@ def login():
     return json.dumps(response_data), 200, {'Content-Type': 'application/json'}
 
 
-"""
-@app.route("/api/login", methods=['GET'])
-def login():
-    authorization_url, state = flow.authorization_url(
-      # Enable offline access so that you can refresh an access token without
-      # re-prompting the user for permission. Recommended for web server apps.
-      access_type='offline',
-      # Enable incremental authorization. Recommended as a best practice.
-      include_granted_scopes='true')
-
-    # Store the state so the callback can verify the auth server response.
-    session['state'] = state
-
-    return redirect(authorization_url)
-"""
 
 import jwt
 
@@ -199,21 +127,6 @@ def callback():
 
     logging.debug(session['credentials'])
     # Obtener el token de acceso de las credenciales
-
-    #access_token = credentials.access_token
-    #access_token = session.get("credentials", {}).get("token")
-
-    #scope_info = get_scope_info(access_token)
-
-    #logging.debug(scope_info)
-
-    logging.debug("daleeeee")
-
-    # Store credentials in the session.
-    # ACTION ITEM: In a production app, you likely want to save these
-    #              credentials in a persistent database instead.
-    #credentials = flow.credentials
-
 
     return redirect(url_for('protected'))
 
