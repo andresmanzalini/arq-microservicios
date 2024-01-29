@@ -12,7 +12,7 @@ nginx comunica frontend con backend
 (imagen arq. microservicios)
 
 
-### estructura del proyecto
+## estructura del proyecto
 
 arq-microservicios
     |-backend/
@@ -46,7 +46,46 @@ arq-microservicios
     |-requirements.txt
 
 
-ESpecificar cada microservicio
+
+
+
+## backend
+
+se puede trabajar de forma aislada o en conjunto
+
+de forma asiada, entrar en el directorio backend y trabajar en el Dockerfike
+hay documentacion especifica en README.md
+
+
+en conjunto, ejecutar el docker compose
+
+
+abrir terminal
+
+1. abrir contenedor de app
+
+    docker-compose exec backend bash
+
+2. inicializar la bd. 
+este paso es solo en el 1er uso
+    
+    flask db init
+
+crea database nueva_BD
+
+
+3. migrar datos de la bd
+
+    flask db migrate
+
+    flask db upgrade
+
+
+4. observar
+
+    docker-compose logs -f backend
+
+
 
 
 ## frontend
@@ -60,4 +99,28 @@ COPY app ./: Este comando copia el contenido del directorio local app (que proba
 npm run build: Este comando ejecuta el script de construcción definido en tu archivo package.json. En la mayoría de las aplicaciones React generadas por Create React App (CRA), este script ejecutará la compilación de la aplicación para producción, creando una versión optimizada y lista para ser desplegada.
 
 En resumen, estos comandos realizan el proceso de construcción de tu aplicación React dentro del contenedor Docker, lo que te permite empaquetar la aplicación y sus dependencias en una imagen que puedes desplegar fácilmente en cualquier entorno compatible con Docker.
+
+
+
+## bd
+
+con el servidor ejecutando, abrir una terminal
+
+
+1. ingresar al contenedor
+
+    docker-compose exec db bash
+
+
+2. conectarse a la instancia mysql
+
+    mysql -u root -p
+
+
+3. inspeccionar la bd
+
+    SHOW DATABASES;
+    USE nueva_BD;
+    SHOW TABLES;
+    SELECT * FROM sesiones;
 
