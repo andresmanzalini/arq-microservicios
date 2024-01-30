@@ -13,6 +13,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session as flask_ses
 
 from flask import jsonify
+import json
+import jwt
+
+from google.auth.transport import requests
 
 import logging
 
@@ -43,7 +47,7 @@ flow = Flow.from_client_secrets_file(
 
 
 
-### utilis
+### utils
 
 def credentials_to_dict(credentials):
   return {'token': credentials.token,
@@ -55,27 +59,25 @@ def credentials_to_dict(credentials):
 
 
 
+### endpoints
+
 @app.route("/")
 def home():
     return "Hola Capo <a href='/api/login'><button>Loging</button></a>"
 
 
-import json
 
-@app.route("/api/login", methods=['GET'])
+@app.route("/api/login")
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
-
     return redirect(authorization_url)
 
 
 
-import jwt
-
 @app.route("/api/callback", methods=['GET'])
 def callback():
-    logging.debug("por favor decime que si")
+    logging.debug("por favor decime que si!!!! callback")
     state = session.get("state")
     received_state = request.args.get("state")
     print("Received state:", received_state)
@@ -106,15 +108,7 @@ def callback():
 
 @app.route("/api/logout")
 def logout():
-    # Obtener el id de sesión de la sesión de Flask
     session_id = session.get("session_id")
-
-    #if session_id:
-        # Buscar la sesión en la base de datos y actualizar el campo logout_time
-    #    session_data = Session.query.get(session_id)
-    #    if session_data:
-    #        session_data.logout_time = datetime.datetime.now()
-    #        db.session.commit()
 
     # Revoca Google access token
     credentials = flow.credentials
@@ -128,27 +122,6 @@ def logout():
 
 
 
-
-
-from google.auth.transport import requests
-
-#def validate_access_token(token):
-#    try:
-#        logging.debug("validate acces token.")
-#        logging.debug(token)
-#        id_info = id_token.verify_oauth2_token(
-#            token,
-#            requests.Request(),
-#            GOOGLE_CLIENT_ID
-#        )
-#        logging.debug("solo decime si entre aca")
-
-        # Verificar que el token sea válido y no haya expirado
-#        if id_info.get('aud') == GOOGLE_CLIENT_ID:
-#            return True
-#    except ValueError:
-#        pass
-#    return False
 
 
 @app.route("/api/protected")
@@ -166,25 +139,25 @@ import google_auth_oauthlib.flow
 
 @app.route('/test')
 def test_api_request():
-  if 'credentials' not in session:
-    return redirect('authorize')
+    if 'credentials' not in session:
+        return redirect('authorize')
 
-  # Load credentials from the session.
-  credentials = session['credentials']
+    # Load credentials from the session.
+    credentials = session['credentials']
 
 
-  ## este test es sobre google drive
-  #drive = googleapiclient.discovery.build(
-  #    API_SERVICE_NAME, API_VERSION, credentials=credentials)
+    ## este test es sobre google drive
+    #drive = googleapiclient.discovery.build(
+    #    API_SERVICE_NAME, API_VERSION, credentials=credentials)
 
- # files = drive.files().list().execute()
+    # files = drive.files().list().execute()
 
-  # Save credentials back to session in case access token was refreshed.
-  # ACTION ITEM: In a production app, you likely want to save these
-  #              credentials in a persistent database instead.
-  session['credentials'] = credentials_to_dict(credentials)
+    # Save credentials back to session in case access token was refreshed.
+    # ACTION ITEM: In a production app, you likely want to save these
+    #              credentials in a persistent database instead.
+    session['credentials'] = credentials_to_dict(credentials)
 
-  #return jsonify(**files)
+    #return jsonify(**files)
 
 
 if __name__=="__main__":
