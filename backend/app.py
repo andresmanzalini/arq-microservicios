@@ -1,5 +1,4 @@
 import os
-import dotenv
 import datetime
 
 from flask import Flask, session, abort, redirect, request, url_for
@@ -20,14 +19,9 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-dotenv.load_dotenv('/env/backend.env')
+CLIENT_SECRET_FILE = 'client-secret.json'
 
-#GOOGLE_CLIENT_ID = os.environ["GOOGLE_CLIENT_ID"]#
-#CLIENT_SECRET_FILE = os.environ["CLIENT_SECRET_FILE"]
-
-# Acceder a las variables de entorno
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-CLIENT_SECRET_FILE = os.getenv("CLIENT_SECRET_FILE")
+GOOGLE_CLIENT_ID = ""
 
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -36,19 +30,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 app = Flask("Google Login")
 
 app.secret_key = "queonda"
-# app.secret_key = os.urandom(24)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-app.config['SESSION_TYPE'] = 'filesystem'
-
-
-db = SQLAlchemy(app)
-
-flask_ses(app)
-
-migrate = Migrate(app, db)
 
 
 ### flujo de autenticacion OAuth
@@ -56,7 +38,7 @@ flow = Flow.from_client_secrets_file(
     client_secrets_file=CLIENT_SECRET_FILE,
     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email",
             "openid"],
-    redirect_uri="http://127.0.0.1/api/callback"
+    redirect_uri="http://127.0.0.1:5000/api/callback"
 )
 
 
@@ -72,19 +54,10 @@ def credentials_to_dict(credentials):
           'scopes': credentials.scopes}
 
 
-def get_scope_info(access_token):
-    # Verificar y decodificar el access token
-    id_info = id_token.verify_oauth2_token(
-        access_token,
-        requests.Request(),
-        GOOGLE_CLIENT_ID
-    )
 
-    # Obtener los scopes del access token
-    scopes = id_info.get('scope')
-
-    # Retornar la información de los scopes
-    return scopes
+@app.route("/")
+def home():
+    return "Hola Capo <a href='/api/login'><button>Loging</button></a>"
 
 
 import json
@@ -94,10 +67,7 @@ def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
 
-    response_data = {
-        "authorization_url": authorization_url
-    }
-    return json.dumps(response_data), 200, {'Content-Type': 'application/json'}
+    return redirect(authorization_url)
 
 
 
@@ -105,6 +75,7 @@ import jwt
 
 @app.route("/api/callback", methods=['GET'])
 def callback():
+    logging.debug("por favor decime que si")
     state = session.get("state")
     received_state = request.args.get("state")
     print("Received state:", received_state)
@@ -125,7 +96,7 @@ def callback():
     credentials = flow.credentials
     session['credentials'] = credentials_to_dict(credentials)
 
-    logging.debug(session['credentials'])
+    #logging.debug(session['credentials'])
     # Obtener el token de acceso de las credenciales
 
     return redirect(url_for('protected'))
@@ -138,12 +109,12 @@ def logout():
     # Obtener el id de sesión de la sesión de Flask
     session_id = session.get("session_id")
 
-    if session_id:
+    #if session_id:
         # Buscar la sesión en la base de datos y actualizar el campo logout_time
-        session_data = Session.query.get(session_id)
-        if session_data:
-            session_data.logout_time = datetime.datetime.now()
-            db.session.commit()
+    #    session_data = Session.query.get(session_id)
+    #    if session_data:
+    #        session_data.logout_time = datetime.datetime.now()
+    #        db.session.commit()
 
     # Revoca Google access token
     credentials = flow.credentials
@@ -157,40 +128,35 @@ def logout():
 
 
 
-#@app.route("/api/protected")
-##@login_is_required
-#def protected():
-#    return "Ojo... <a href='/api/logout'><button>Logout</button></a>"
-
-
 
 
 from google.auth.transport import requests
 
-def validate_access_token(token):
-    try:
-        logging.debug("entro aca? balastrule. probablemente aca este fallando...")
-        logging.debug(token)
-        id_info = id_token.verify_oauth2_token(
-            token,
-            requests.Request(),
-            GOOGLE_CLIENT_ID
-        )
-        logging.debug("solo decime si entre aca")
+#def validate_access_token(token):
+#    try:
+#        logging.debug("validate acces token.")
+#        logging.debug(token)
+#        id_info = id_token.verify_oauth2_token(
+#            token,
+#            requests.Request(),
+#            GOOGLE_CLIENT_ID
+#        )
+#        logging.debug("solo decime si entre aca")
 
         # Verificar que el token sea válido y no haya expirado
-        if id_info.get('aud') == GOOGLE_CLIENT_ID:
-            return True
-    except ValueError:
-        pass
-    return False
+#        if id_info.get('aud') == GOOGLE_CLIENT_ID:
+#            return True
+#    except ValueError:
+#        pass
+#    return False
 
 
 @app.route("/api/protected")
 def protected():
     access_token = session.get("credentials", {}).get("token")
-    if not validate_access_token(access_token):
-        return abort(401)
+    logging.debug(access_token)
+    #if not validate_access_token(access_token):
+    #    return abort(401)
     return "Contenido protegido. <a href='/api/logout'><button>Cerrar sesión</button></a>"
 
 
@@ -222,5 +188,5 @@ def test_api_request():
 
 
 if __name__=="__main__":
-    app.run(host='0.0.0.0', port=3001)
+    app.run(host='127.0.0.1', port=5000)
     #app.run()
