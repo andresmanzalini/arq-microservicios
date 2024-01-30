@@ -60,25 +60,39 @@ BIEN!
 
 ------------------------------------------------------------------------------------------------
 
+
 ## Error 2 : Secretos
 
-solucionado
+solucionado con docker-compose secrets
 
-explicar docker secrets
+explicar como accedeelo desde la app
 
-y como accedeelo desde la app
 
 ------------------------------------------------------------------------------------------------
 
+
 ## Error 3 : acces denied
 
-api login funciona
+login funciona bien, genera el url de redireccionamiento
 
-genera el url de redireccionamiento
+el url de redireccionamiento redirige a google accounts
 
-y aho, entre apilogin y api/callback falla por un problema de permisos denegado
+al loguearse, se verifica la autenticacion y el servidor de google le manda la respuesta a la URI autorizada. es decir, a http://127.0.0.1:5000/api/callback
 
-. cambie el proyecto de google cloud -> nada
+falla en esa instamncia. c8ando el server de google recibe el login oara acceder a la app, no encuentra el email como autorizado y devuelve acceso_denegado
 
 
-backend  | INFO:werkzeug:192.168.65.1 - - [28/Jan/2024 18:44:47] "GET /api/login HTTP/1.1" 302 -
+solucion:
+
+a final el problema era la forrada mas simple imaginable
+
+el problema esta a la hora de CREAR el proyecto en google.console 
+
+al crear el proyecto, primero hay que configurar la pantalla de consentimiento
+
+ahi hay una seccion para **especificar los usuarios de prueba**
+
+esos usuarios agregados tienen permiso para login y autenticacion con google mediante OAuth2
+
+entrar a la app con cualquier otro usuario da erropr acces_denied
+

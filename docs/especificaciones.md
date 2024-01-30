@@ -47,7 +47,49 @@ arq-microservicios
 
 
 
+## crear en google.console proyecto y cliente OAuth
 
+1. https://console.cloud.google.com/
+
+2. Nuevo Proyecto -> nombre -> crear proyecto -> seleccionar prouyecto
+
+3. Configurar pantalla de CONSENTIMIENTO
+
+3.1 Pantalla de consentimiento
+    3.1.1 externo -> crear
+    3.1.2 nombre app , email , info contacto desarrollador
+    3.1.3 guardar y continuar
+
+3.2 Permisos
+    3.2.1 agregar o quitar permisos -> seleccionar permisos -> actuaizar
+    3.2.2 guardar y continuar
+
+3.3 Usuarios de Prueba **!ACA!**
+    3.3.1 add user -> usuario@gmail.com -> agregar usuario
+    3.3.2 guardar y continuar
+
+agregar los usuarios de prueba de la app. esos usuarios saltan el error acces_denied
+
+volver al panel
+
+
+4. Credenciales
+
+4.1 Crear credenciales -> id cliente OAuth
+
+4.2 crear id cliente OAuth
+4.2.1 tipo aplicacion -> aplicacion web ,  nombre
+4.2.2 URI de redireccionamiento autorizado -> agregar URI -> http://127.0.0.1:5000/api/callback
+4.2.3 crear
+4.2.4 descargar json -> aceptar
+descarga client-secret.json 
+pegar ese archivo en arq-microservicios/secrets
+
+listo, ya se puede usar ese cliente OAuth de prueba , el cual es redirigido al callback endpoint especificado en 4.2.2
+
+
+
+## Microservicios
 
 ## backend
 
