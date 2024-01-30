@@ -3,11 +3,21 @@
 arquitectura de 4 microservicios 
 
 
+<br/>
+
+
 **backend** 
 
 Flask, OAuth2.0
 
 login y autenticacion con google mediante OAuth2.0
+
+
+backend workflow -> para trabajar con el backend aislado ir al directorio y trabajar sobre el docker, no sobre el compose
+
+cd backend
+
+seguir las instrucciones del backend/README.md 
 
 
 **db** 
@@ -32,53 +42,23 @@ React?
 <br/>
 
 
-## Construir y ejecutar app
+### Construir y ejecutar app
 
 docker-compose up --build
 
 
-## bajar la app y resetearla
+### bajar la app y resetearla
 
 docker-compose down
 
-docker volume rm micro-auth-bd-docker_db_data
-
-
-
-<br/>
-
-## Microservicios
-
-
-### backend
-
-app workflow
-
-para trabajar con el backend aislado ir al directorio y trabajar sobre el docker, no sobre el compose
-
-cd backend
-
-y seguir las instrucciones del backend/README.md 
 
 
 <br/>
 
 
 
-## FALTA
-
-### monitor
-
-cuando se tira un docker-compose up  se abra 1 terminal por cada microservicio
-
-en vez de mostrar todo en la misma consola, estaria bueno que se muestre en 1 cinsola por miroservicio
 
 
-### acceso protegido a recursos de usuario 
-
-bearer
-
-jwt
 
 
 
