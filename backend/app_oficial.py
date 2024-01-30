@@ -21,8 +21,8 @@ CLIENT_SECRETS_FILE = "client-secret.json"
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
-#SCOPES=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"]
+#SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+SCOPES = ["openid", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/drive.metadata.readonly", "https://www.googleapis.com/auth/userinfo.profile"]
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v2'
 
@@ -32,6 +32,9 @@ app = flask.Flask(__name__)
 # key. See https://flask.palletsprojects.com/quickstart/#sessions.
 app.secret_key = 'secretkey'
 
+
+
+## endpoints
 
 @app.route('/')
 def index():
@@ -60,12 +63,12 @@ def test_api_request():
   return flask.jsonify(**files)
 
 
+
 @app.route('/authorize')
 def authorize():
   # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
   flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
       CLIENT_SECRETS_FILE, scopes=SCOPES)
-  #logging.debug("authorize")
   # The URI created here must exactly match one of the authorized redirect URIs
   # for the OAuth 2.0 client, which you configured in the API Console. If this
   # value doesn't match an authorized URI, you will get a 'redirect_uri_mismatch'
@@ -86,6 +89,7 @@ def authorize():
   logging.debug(state)
 
   return flask.redirect(authorization_url)
+
 
 
 @app.route('/oauth2callback')
@@ -113,6 +117,7 @@ def oauth2callback():
   return flask.redirect(flask.url_for('test_api_request'))
 
 
+
 @app.route('/revoke')
 def revoke():
   if 'credentials' not in flask.session:
@@ -133,12 +138,14 @@ def revoke():
     return('An error occurred.' + print_index_table())
 
 
+
 @app.route('/clear')
 def clear_credentials():
   if 'credentials' in flask.session:
     del flask.session['credentials']
   return ('Credentials have been cleared.<br><br>' +
           print_index_table())
+
 
 
 def credentials_to_dict(credentials):
@@ -169,6 +176,7 @@ def print_index_table():
           '    After clearing the token, if you <a href="/test">test the ' +
           '    API request</a> again, you should go back to the auth flow.' +
           '</td></tr></table>')
+
 
 
 if __name__ == '__main__':

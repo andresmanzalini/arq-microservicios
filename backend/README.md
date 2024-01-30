@@ -27,4 +27,3 @@ docker run
 /api/callback
 
 /api/logout
-
