@@ -37,8 +37,6 @@ nodejs
 React?
 
 
-
-
 <br/>
 
 
@@ -57,6 +55,37 @@ docker-compose down
 
 
 
+
+```
+├── backend
+    ├── app.py
+    ├── app_oficial.py
+    ├── Dockerfile
+    ├── README.md
+    └── requirements.txt
+├── docs
+    ├── errores.md
+    ├── especificaciones.md
+    └── info.md
+├── virtualEnv
+├── frontend
+    ├── app.js
+    ├── Dockerfile
+    └── config
+├── nginx
+    ├── configs
+        ├── default.conf
+        └── index.js
+    ├── asdas
+    └── Dockerfile
+├── secrets
+    └── client-secret.json
+├── .gitignore
+├── docker-compose.yml
+├── README.md
+└── requirements.txt
+
+```
 
 
 
