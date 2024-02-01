@@ -50,11 +50,9 @@ docker-compose up --build
 docker-compose down
 
 
-
 <br/>
 
-
-
+## Estructura del Proyecto
 
 ```
 ├── backend
@@ -76,7 +74,7 @@ docker-compose down
     ├── configs
         ├── default.conf
         └── index.js
-    ├── asdas
+    ├── asdas.sda
     └── Dockerfile
 ├── secrets
     └── client-secret.json
