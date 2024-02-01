@@ -4,6 +4,7 @@ db
 backend/client-secret.json
 secrets
 envArqMicro/
+
 docs/
 
 frontend/
