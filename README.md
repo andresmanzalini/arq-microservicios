@@ -3,10 +3,15 @@
 Arquitectura minimalista funcional, escalable y segura
 
 Microservicios:
+
     * backend -> Flask Web Server, OAuth2
+
     * bd -> muySQL para guardar Usuarios AUthorizados
+
     * frontend -> React
+
     * nginx -> proxy inverso, load balancer, API Gateway
+
 
 </br>
 
@@ -14,51 +19,40 @@ Microservicios:
 ## Microservicio Backend
 
 Flask -> Web Server Framework
-OAuth2 -> Autenticacion y Autorizacion
+OAuth2 -> Autenticacion y Autorizacion con Google
 
 1. Autenticacion
 2. Autorizacion
 
 Una vez autenticado y autorizado, el usuario puede acceder a la seccion protegida
 
-
-
-<br/>
-
-
-## backend
-
-tecnologias:
-    . Flask, para web server minimalista 
-    . OAuth2.0 , para autenticacion y autorizacion con google usando OAuth2
-
-
-. autenticacion con google account mediante OAuth2
-
-. autorizacion para acceder a las API de Google
-
-
 un usuario autenticado y autorizado puede acceder a info protegida, guardar data protegida, tratamiento personalizado con IA de recomendacion.
 
 un usuario no logueado solo puede acceder a muestras, pero no tiene IA personalizada de recomendacion ni guarado persistente de data
 
+
 </br>
 
-## db
+
+## Microservicio db
 
 mySQL para guardar Authorizaciones y Permisos
 
+depende de backend
+
+
 </br>
 
-## nginx 
+## Microservicio nginx 
 
 proxy inverso (load balancer) para comunicacion entre microservicios
 
-extender a API Gateway
+la idea es extenderlo a API Gateway
+
 
 </br>
 
-## frontend
+## Microservicio frontend
 
 tecnologias:
     . nodejs 
@@ -66,15 +60,19 @@ tecnologias:
 
 
 <br/>
+------------------------------------------------------------------------
+<br/>
 
 
-### Construir y ejecutar app
+## Construir y ejecutar app
 
 docker-compose up --build
 
 docker-compose down
 
 
+<br/>
+------------------------------------------------------------------------
 <br/>
 
 
