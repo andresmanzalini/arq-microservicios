@@ -1,37 +1,43 @@
 version: "3.9"
 services:
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    depends_on:
-      - frontend
-      - backend
-    container_name: nginx
-    restart: always
-  frontend:
-    build:
-        context: ./frontend
-        dockerfile: Dockerfile
-    container_name: frontend
-    restart: always
+  #nginx:
+  #  build:
+  #    context: ./nginx
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "80:80"
+  #  depends_on:
+  #    - frontend
+  #    - backend
+  #  container_name: nginx
+  #  restart: always
+  #frontend:
+  #  build:
+  #      context: ./frontend
+  #      dockerfile: Dockerfile
+  #  container_name: frontend
+  #  restart: always
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
-    env_file:
-      - ./env/backend.env
+    ports:
+      - "8080:8080"
+    #  - "5000:5000"
     restart: always
-  db:
-    image: mysql:latest
-    container_name: db
-    environment:
-      - MYSQL_DATABASE=nueva_BD
-      - MYSQL_ROOT_PASSWORD=Que_0nda_l0c0
-    volumes:
-      - ./db/db_data:/var/lib/mysql
-    env_file:
-      - ./env/mysql.env
+    secrets:
+      - client_secret
+  #db:
+  #  image: mysql:latest
+  #  container_name: db
+  #  environment:
+  #    - MYSQL_DATABASE=nueva_BD
+  #    - MYSQL_ROOT_PASSWORD=Que_0nda_l0c0
+  #  volumes:
+  ##    - ./db/db_data:/var/lib/mysql
+  #  env_file:
+  #    - ./env/mysql.env
+secrets:
+  client_secret:
+    file: ./secrets/client-secret.json
