@@ -1,40 +1,54 @@
-# App de login y autenticacion con OAuth2.0
+# Arq microservicios 
 
-arquitectura de 4 microservicios 
+## Autenticacion y autorizacion con OAuth2.0
+
+1. Autenticacion
+2. Autorizacion
+
+implementa el protocolo OAuth2
+
+Una vez autenticado y autorizado, el usuario puede acceder a la seccion protegida
+
+
 
 
 <br/>
 
 
-**backend** 
+## backend
 
-Flask, OAuth2.0
-
-login y autenticacion con google mediante OAuth2.0
-
-
-backend workflow -> para trabajar con el backend aislado ir al directorio y trabajar sobre el docker, no sobre el compose
-
-cd backend
-
-seguir las instrucciones del backend/README.md 
+tecnologias:
+    . Flask, para web server minimalista 
+    . OAuth2.0 , para autenticacion y autorizacion con google usando OAuth2
 
 
-**db** 
+. autenticacion con google account mediante OAuth2
 
-mySQL
-
-
-**nginx** 
-
-proxy inverso para comunicacion entr microservicios y cliente
+. autorizacion para acceder a las API de Google
 
 
-**frontend** 
+un usuario autenticado y autorizado puede acceder a info protegida, guardar data protegida, tratamiento personalizado con IA de recomendacion.
 
-nodejs 
+un usuario no logueado solo puede acceder a muestras, pero no tiene IA personalizada de recomendacion ni guarado persistente de data
 
-React?
+
+
+## db
+
+tecnologias:
+    . mySQL para guardar Authorizaciones y Permisos
+
+
+## nginx 
+
+proxy inverso (load balancer) para comunicacion entr microservicios
+
+
+## frontend
+
+tecnologias:
+    . nodejs 
+    . React
 
 
 <br/>
@@ -44,40 +58,35 @@ React?
 
 docker-compose up --build
 
-
-### bajar la app y resetearla
-
 docker-compose down
 
 
 <br/>
 
+
 ## Estructura del Proyecto
 
 ```
-├── backend
-    ├── app.py
-    ├── app_oficial.py
-    ├── Dockerfile
-    ├── README.md
-    └── requirements.txt
-├── docs
-    ├── errores.md
-    ├── especificaciones.md
-    └── info.md
-├── virtualEnv
-├── frontend
-    ├── app.js
-    ├── Dockerfile
-    └── config
-├── nginx
-    ├── configs
-        ├── default.conf
-        └── index.js
-    ├── asdas.sda
-    └── Dockerfile
+
+├── authentication-service
+│   ├── app.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── documentation
+│   ├── errors.md
+│   ├── specifications.md
+│   └── info.md
+├── frontend-service
+│   ├── app.js
+│   ├── Dockerfile
+│   └── config
+├── nginx-proxy
+│   ├── configs
+│   │   ├── default.conf
+│   │   └── index.js
+│   ├── Dockerfile
 ├── secrets
-    └── client-secret.json
+│   └── client-secret.json
 ├── .gitignore
 ├── docker-compose.yml
 ├── README.md
@@ -85,16 +94,10 @@ docker-compose down
 
 ```
 
+</br>
 
+### Por hacer
 
+optimizar el diseno y la impementacion
 
-
-
-### Documentacion oficial OAuth 
-
-https://developers.google.com/identity/protocols/oauth2/web-server?hl=es-419#authorization-errors-redirect-uri-mismatch
-
-https://developers.google.com/identity/sign-in/web/server-side-flow?hl=es-419
-
-
-
+convertir en una API Gateway
