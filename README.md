@@ -1,14 +1,25 @@
-# Arq microservicios 
+# Arquitectura de microservicios 
 
-## Autenticacion y autorizacion con OAuth2.0
+Arquitectura minimalista funcional, escalable y segura
+
+Microservicios:
+    * backend -> Flask Web Server, OAuth2
+    * bd -> muySQL para guardar Usuarios AUthorizados
+    * frontend -> React
+    * nginx -> proxy inverso, load balancer, API Gateway
+
+</br>
+
+
+## Microservicio Backend
+
+Flask -> Web Server Framework
+OAuth2 -> Autenticacion y Autorizacion
 
 1. Autenticacion
 2. Autorizacion
 
-implementa el protocolo OAuth2
-
 Una vez autenticado y autorizado, el usuario puede acceder a la seccion protegida
-
 
 
 
@@ -31,18 +42,21 @@ un usuario autenticado y autorizado puede acceder a info protegida, guardar data
 
 un usuario no logueado solo puede acceder a muestras, pero no tiene IA personalizada de recomendacion ni guarado persistente de data
 
-
+</br>
 
 ## db
 
-tecnologias:
-    . mySQL para guardar Authorizaciones y Permisos
+mySQL para guardar Authorizaciones y Permisos
 
+</br>
 
 ## nginx 
 
-proxy inverso (load balancer) para comunicacion entr microservicios
+proxy inverso (load balancer) para comunicacion entre microservicios
 
+extender a API Gateway
+
+</br>
 
 ## frontend
 
@@ -98,6 +112,6 @@ docker-compose down
 
 ### Por hacer
 
-optimizar el diseno y la impementacion
+. optimizar el diseno y la impementacion
 
-convertir en una API Gateway
+. convertir microservicio nginx de proxy inverso en una API Gateway
