@@ -16,13 +16,13 @@ logging.basicConfig(level=logging.DEBUG)
 
 # This variable specifies the name of a file that contains the OAuth 2.0
 # information for this application, including its client_id and client_secret.
-#CLIENT_SECRETS_FILE = "/run/secrets/client_secrets_json"
-CLIENT_SECRETS_FILE = "client-secret.json"
+CLIENT_SECRETS_FILE = "/run/secrets/client_secret"
+#CLIENT_SECRETS_FILE = "client-secret.json"
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
 #SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
-SCOPES = ["openid", "https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/drive.metadata.readonly", "https://www.googleapis.com/auth/userinfo.profile"]
+SCOPES = ["openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.profile"]
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v2'
 
@@ -43,6 +43,9 @@ def index():
 
 @app.route('/test')
 def test_api_request():
+  logging.debug("test api request")
+  logging.debug("\n")
+
   if 'credentials' not in flask.session:
     return flask.redirect('authorize')
 
@@ -84,29 +87,28 @@ def authorize():
   # Store the state so the callback can verify the auth server response.
   flask.session['state'] = state
 
-  logging.debug("/authorizer")
-  logging.debug(authorization_url)
-  logging.debug(state)
-
   return flask.redirect(authorization_url)
 
 
 
 @app.route('/oauth2callback')
 def oauth2callback():
-  logging.debug("llega a oauth2callback ?????????")
-
   # Specify the state when creating the flow in the callback so that it can
   # verified in the authorization server response.
   state = flask.session['state']
 
   flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
       CLIENT_SECRETS_FILE, scopes=SCOPES, state=state)
-  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
+  flow.redirect_uri = flask.url_for('oauth2callback', _external=True)  
 
   # Use the authorization server's response to fetch the OAuth 2.0 tokens.
   authorization_response = flask.request.url
+
+  logging.debug("flow.fetch_token(auth_response)")
+
   flow.fetch_token(authorization_response=authorization_response)
+
+  logging.debug("\n")
 
   # Store credentials in the session.
   # ACTION ITEM: In a production app, you likely want to save these
@@ -184,8 +186,8 @@ if __name__ == '__main__':
   # ACTION ITEM for developers:
   #     When running in production *do not* leave this option enabled.
   os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+  os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
   # Specify a hostname and port that are set as a valid redirect URI
   # for your API project in the Google API Console.
-  #app.run('localhost', 8080, debug=True)
-  app.run(host='127.0.0.1', port=8080, debug=True) 
+  app.run(host='0.0.0.0', port=8080)#, debug=True) 
