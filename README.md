@@ -108,6 +108,10 @@ docker-compose down
 
 </br>
 
+![Diag Seq](diag-seq-auth.png)
+
+</br>
+
 ### Por hacer
 
 . optimizar el diseno y la impementacion
