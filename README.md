@@ -4,13 +4,10 @@ Arquitectura minimalista funcional, escalable y segura
 
 Microservicios:
 
-    * backend -> Flask Web Server, OAuth2
-
-    * bd -> muySQL para guardar Usuarios AUthorizados
-
-    * frontend -> React
-
-    * nginx -> proxy inverso, load balancer, API Gateway
+* backend -> Flask Web Server, OAuth2
+* bd -> muySQL para guardar Usuarios AUthorizados
+* frontend -> React
+* nginx -> proxy inverso, load balancer, API Gateway
 
 
 </br>
@@ -59,9 +56,9 @@ tecnologias:
     . React
 
 
-<br/>
+</br>
 ------------------------------------------------------------------------
-<br/>
+</br>
 
 
 ## Construir y ejecutar app
@@ -81,7 +78,7 @@ docker-compose down
 
 ```
 
-├── authentication-service
+├── backend
 │   ├── app.py
 │   ├── Dockerfile
 │   └── requirements.txt
@@ -89,14 +86,13 @@ docker-compose down
 │   ├── errors.md
 │   ├── specifications.md
 │   └── info.md
-├── frontend-service
+├── frontend
 │   ├── app.js
 │   ├── Dockerfile
 │   └── config
-├── nginx-proxy
+├── nginx
 │   ├── configs
 │   │   ├── default.conf
-│   │   └── index.js
 │   ├── Dockerfile
 ├── secrets
 │   └── client-secret.json
