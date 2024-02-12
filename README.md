@@ -66,14 +66,15 @@ tecnologias:
 
 ## Construir y ejecutar app
 
+```
 docker-compose up --build
 
 docker-compose down
+```
 
-
-<br/>
+</br>
 ------------------------------------------------------------------------
-<br/>
+</br>
 
 
 ## Estructura del Proyecto
@@ -108,12 +109,7 @@ docker-compose down
 
 </br>
 
+## Diagrama Secuencia Auth
+
 ![Diag Seq](diag-seq-auth.png)
 
-</br>
-
-### Por hacer
-
-. optimizar el diseno y la impementacion
-
-. convertir microservicio nginx de proxy inverso en una API Gateway
