@@ -1,16 +1,16 @@
 version: "3.9"
 services:
-  #nginx:
-  #  build:
-  #    context: ./nginx
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "80:80"
-  #  depends_on:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
   #    - frontend
-  #    - backend
-  #  container_name: nginx
-  #  restart: always
+      - backend
+    container_name: nginx
+    restart: always
   #frontend:
   #  build:
   #      context: ./frontend
@@ -22,9 +22,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: backend
-    ports:
-      - "8080:8080"
-    #  - "5000:5000"
     restart: always
     secrets:
       - client_secret
