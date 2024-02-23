@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from flask import Flask, session, abort, redirect, request, url_for, jsonify
+from flask import Flask, session, abort, redirect, request, url_for, jsonify, make_response
 
 from google.auth.transport import requests
 from google.oauth2 import id_token
@@ -12,7 +12,7 @@ import requests as rq
 
 import logging
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 
 CLIENT_SECRET_FILE = '/run/secrets/client_secret'
@@ -32,7 +32,7 @@ flow = Flow.from_client_secrets_file(
     scopes=["https://www.googleapis.com/auth/userinfo.profile", 
             "https://www.googleapis.com/auth/userinfo.email",
             "openid"],
-    redirect_uri="http://127.0.0.1:5000/api/callback"
+    redirect_uri="http://127.0.0.1:80/api/callback"
 )
 
 
@@ -48,19 +48,17 @@ def credentials_to_dict(credentials):
 
 
 
-### API Auth
+### APIs 
 
 @app.route("/")
 def home():
-    return "Hola Capo <a href='/api/login'><button>Loging</button></a>"
+    return "Hola Capo <a href='/api/login'><button>Login</button></a>"
 
 
 @app.route("/api/login")
 def login():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
-    logging.debug("/api/login")
-    logging.debug(authorization_url)
     return redirect(authorization_url)
 
 
@@ -81,16 +79,32 @@ def callback():
     credentials = flow.credentials
     
     session['credentials'] = credentials_to_dict(credentials)
+    
+    # Obtén el token de la sesión
+    #credentials = flow.credentials
+    access_token = credentials.token
+    
+    # Redirige al usuario a /api/protected con el token en el encabezado de autorización
+    #response = make_response(redirect(url_for('protected')))
+    #response.headers['Authorization'] = f'Bearer {access_token}'
+    
+    #response = make_response(redirect(url_for('protected', access_token=access_token)))
+    #return response
 
-    return redirect(url_for('protected'))
+    redirect_url = "/api/protected?access_token=" + access_token
+    response = make_response(redirect(redirect_url))
+    return response
+
+    #return response
+    # Redirige al usuario a /api/protected con el token en el encabezado de autorización
+    #return redirect(url_for('protected'), code=302, headers={'Authorization': f'Bearer {access_token}'})
+    #return redirect(url_for('protected'))
 
 
 
 
 @app.route("/api/logout")
 def logout():
-    session_id = session.get("session_id")
-
     # Revoca Google access token
     credentials = flow.credentials
     if credentials and credentials.token:
@@ -104,31 +118,76 @@ def logout():
 
 
 
-
 @app.route("/api/protected")
 def protected():
-    access_token = session.get("credentials", {}).get("token")
-    # mostrar algo protegido
-
-    return "Contenido protegido. <a href='/api/logout'><button>Cerrar sesión</button></a>"
-
-
-
-@app.route('/test')
-def test_api_request():
+    # Verifica si las credenciales están en la sesión
     if 'credentials' not in session:
-        return jsonify("logueate o raja de aca")#redirect('authorize')
+        confite_content = ("<p>Que flashas confite? Logueate si queres acceder a contenido protegido</p>"
+                            "<p><a href='/api/login'><button>Login</button></a></p>")
+        return confite_content
 
-    credentials = session['credentials']
+    # Carga las credenciales desde la sesión
+    credentials_dict = session['credentials']
+    credentials_obj = google.oauth2.credentials.Credentials(**credentials_dict)
 
-    return jsonify(credentials)
+    # Asegúrate de que las credenciales sean válidas y no hayan expirado
+    if not credentials_obj.valid:
+        return jsonify({"error": "Credenciales inválidas o expiradas"}), 401
 
-
-# endpoints para listar files de google drive, guardar algo en el google drive?
-
-# endpoint para acceder a localizacion, a info de ghoogle.
     
+    response_content = (
+        "<p>Credenciales:</p>"
+        f"<pre>{credentials_dict}</pre>"
+        "<p><a href='/api/logout'><button>Cerrar sesión</button></a></p>"
+    )
 
+    return response_content
+
+
+
+
+@app.route("/auth", methods=['POST'])
+def auth():
+    #logging.debug("no lo puedo cre. estoy en /auth haciendo un POST!")
+    logging.info("que onda /auth ?")
+    #logging.info(f"Token recibido en /auth: {access_token}")
+
+    # Obtener el token de acceso del parámetro de la URL
+    access_token = request.args.get("access_token")
+    logging.info(access_token)    
+    
+    if not access_token:
+        return jsonify({"error": "Token de acceso no proporcionado"}), 401
+
+    # Obtener el token de acceso del encabezado Authorization
+    auth_header = request.headers.get("Authorization")
+    
+    logging.info(auth_header)
+    logging.info('\n')
+
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return jsonify({"error": "Token de acceso no proporcionado"}), 401
+
+    access_token = auth_header.split(" ")[1]
+    
+    logging.info(access_token)
+    logging.info('\n')
+    
+    try:
+        # Verificar y decodificar el token de acceso utilizando la biblioteca google.auth
+        id_info = id_token.verify_oauth2_token(
+            access_token,
+            requests.Request(),
+            CLIENT_SECRET_FILE  # Puedes cargar esta información de forma segura como en el ejemplo anterior
+        )
+
+        # Aquí puedes realizar acciones adicionales, como verificar roles, permisos, etc.
+        # También puedes almacenar información del usuario en la base de datos o en la sesión de Flask si es necesario.
+
+        return jsonify({"message": "Autorizado", "user_info": id_info}), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 401
 
 
 if __name__=="__main__":

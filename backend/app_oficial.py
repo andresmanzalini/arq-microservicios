@@ -21,8 +21,8 @@ CLIENT_SECRETS_FILE = "/run/secrets/client_secret"
 
 # This OAuth 2.0 access scope allows for full read/write access to the
 # authenticated user's account and requires requests to use an SSL connection.
-#SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
-SCOPES = ["openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.profile"]
+SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+#SCOPES = ["openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/userinfo.profile"]
 API_SERVICE_NAME = 'drive'
 API_VERSION = 'v2'
 
@@ -105,6 +105,7 @@ def oauth2callback():
   authorization_response = flask.request.url
 
   logging.debug("flow.fetch_token(auth_response)")
+  logging.debug("\n")
 
   flow.fetch_token(authorization_response=authorization_response)
 
