@@ -1,13 +1,19 @@
 .idea
-env/
+
 db
+
 backend/client-secret.json
+backend/.DS_Store
+
 secrets
+
 envArqMicro/
 
 docs/
 
 frontend/
 
+nginx/configs/confi.conf
+nginx/configs/confite.conf
+
 .DS_Store
-backend/.DS_Store
