@@ -57,8 +57,6 @@ tecnologias:
 
 
 </br>
-------------------------------------------------------------------------
-</br>
 
 
 ## Construir y ejecutar app
@@ -71,8 +69,6 @@ docker-compose up --build
 docker-compose down
 ```
 
-</br>
-------------------------------------------------------------------------
 </br>
 
 
@@ -110,4 +106,31 @@ docker-compose down
 ## Diagrama Secuencia Auth
 
 ![Diag Seq](diag-seq-auth.png)
+
+</br>
+
+## Observaciones 
+
+La situacion es la siguiente.
+
+La arquitectura de microservicios tiene:
+    . un microservicio backend que se encarga del login, autenticacion y autorizacion con OAuth2.
+    . un API Gateway nginx que se encarga de manejo de solicitudes
+    . un microservicio frontend 
+
+
+el backend se encarga de autenticacion y Authorizacion 
+
+el problema es que una vez logueado el cliente, necesita usar las credenciales para hacer solicitudes a otros microservicios de la arquitectura.
+
+
+## Por hacer
+
+. integrar el microservicio frontend
+
+. integrar bd
+
+. guardar credenciales en bd
+
+. integrar una queue (rabbitMQ?) para comunicar servicios
 
