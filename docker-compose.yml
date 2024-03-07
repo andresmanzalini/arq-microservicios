@@ -25,16 +25,18 @@ services:
     restart: always
     secrets:
       - client_secret
-  #db:
-  #  image: mysql:latest
-  #  container_name: db
-  #  environment:
-  #    - MYSQL_DATABASE=nueva_BD
-  #    - MYSQL_ROOT_PASSWORD=Que_0nda_l0c0
-  #  volumes:
-  ##    - ./db/db_data:/var/lib/mysql
-  #  env_file:
-  #    - ./env/mysql.env
+  db:
+    image: mysql:latest
+    container_name: db
+    environment:
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - ./db/db_data:/var/lib/mysql
+    secrets:
+      - db_secret
 secrets:
   client_secret:
     file: ./secrets/client-secret.json
+  db_secret: 
+    file: ./secrets/mysql.env
