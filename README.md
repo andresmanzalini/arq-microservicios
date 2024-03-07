@@ -1,11 +1,9 @@
 # Arquitectura de microservicios 
 
-Arquitectura minimalista funcional, escalable y segura
-
-Microservicios:
+Funcional, minimalista, escalable y segura
 
 * backend -> Flask Web Server, OAuth2
-* bd -> muySQL para guardar Usuarios AUthorizados
+* bd -> mySQL para usuarios authorizados
 * frontend -> React
 * nginx -> proxy inverso, load balancer, API Gateway
 
@@ -18,14 +16,11 @@ Microservicios:
 Flask -> Web Server Framework
 OAuth2 -> Autenticacion y Autorizacion con Google
 
-1. Autenticacion
-2. Autorizacion
+Una vez autenticado y autorizado, el usuario puede acceder a las API protegida.
 
-Una vez autenticado y autorizado, el usuario puede acceder a la seccion protegida
+Un usuario autenticado y autorizado puede acceder a info protegida, guardar data, acceder a apis de IA 
 
-un usuario autenticado y autorizado puede acceder a info protegida, guardar data protegida, tratamiento personalizado con IA de recomendacion.
-
-un usuario no logueado solo puede acceder a muestras, pero no tiene IA personalizada de recomendacion ni guarado persistente de data
+Un usuario no logueado solo puede acceder al landing page y hacer algunas pruebas.
 
 
 </br>
@@ -33,9 +28,7 @@ un usuario no logueado solo puede acceder a muestras, pero no tiene IA personali
 
 ## Microservicio db
 
-mySQL para guardar Authorizaciones y Permisos
-
-depende de backend
+mySQL para guardar Auth tokens y Permisos
 
 
 </br>
@@ -44,14 +37,13 @@ depende de backend
 
 proxy inverso (load balancer) para comunicacion entre microservicios
 
-la idea es extenderlo a API Gateway
+extender a API Gateway
 
 
 </br>
 
 ## Microservicio frontend
 
-tecnologias:
     . nodejs 
     . React
 
@@ -80,7 +72,7 @@ docker-compose down
 │   ├── app.py
 │   ├── Dockerfile
 │   └── requirements.txt
-├── documentation
+├── docs
 │   ├── errors.md
 │   ├── specifications.md
 │   └── info.md
@@ -111,17 +103,17 @@ docker-compose down
 
 ## Observaciones 
 
-La situacion es la siguiente.
+. un microservicio backend que se encarga del login, autenticacion y autorizacion con OAuth2.
 
-La arquitectura de microservicios tiene:
-    . un microservicio backend que se encarga del login, autenticacion y autorizacion con OAuth2.
-    . un API Gateway nginx que se encarga de manejo de solicitudes
-    . un microservicio frontend 
+. una bd con usuarios y autorizaciones 
+
+. un API Gateway nginx que se encarga de manejo de solicitudes
+
+. un microservicio frontend 
 
 
-el backend se encarga de autenticacion y Authorizacion 
-
-el problema es que una vez logueado el cliente, necesita usar las credenciales para hacer solicitudes a otros microservicios de la arquitectura.
+el backend se encarga de autenticacion y Authorizacion. 
+el problema es que una vez logueado, el cliente necesita usar las credenciales para hacer solicitudes a otros microservicios de la arquitectura.
 
 
 ## Por hacer
@@ -130,7 +122,10 @@ el problema es que una vez logueado el cliente, necesita usar las credenciales p
 
 . integrar bd
 
-. guardar credenciales en bd
+. guardar usuarios y credenciales en bd
 
-. integrar una queue (rabbitMQ?) para comunicar servicios
+. integrar una queue (rabbitMQ) para comunicar servicios
 
+. integrar MLOps
+
+. optimizar nginx API gateway -> kong API gateway
