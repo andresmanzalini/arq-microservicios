@@ -85,6 +85,7 @@ docker-compose down
 │   │   ├── default.conf
 │   ├── Dockerfile
 ├── secrets
+|   ├── mysql.env
 │   └── client-secret.json
 ├── .gitignore
 ├── docker-compose.yml
